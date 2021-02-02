@@ -1,0 +1,48 @@
+
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import plotly.express as px
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import plotly.figure_factory as ff
+
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
+# assume you have a "long-form" data frame
+# see https://plotly.com/python/px-arguments/ for more options
+df = pd.read_csv('https://raw.githubusercontent.com/daniel-dc-cd/data_science/master/module_3_Python/data/titanic.csv')
+
+fig = px.bar(df, x= "Sex", y="Survived", color="Sex", barmode="group")
+
+fig1 = px.bar(df, x= "Pclass", y ='Survived', barmode = "group", color = "Pclass")
+
+fig2 = px.bar(df, x = "Pclass", y = "Survived", barmode = "group", facet_col="Sex", color = "Pclass")
+#tree of compnoents
+#first component: html.div()
+app.layout = html.Div(children=[
+ html.H1(children='Titanic Dataset'),
+
+    html.Div(children='''
+        this dash app is dedicated to do EDA on titanic dataset'''
+    ),
+  #second component: dcc.Graph()
+    dcc.Graph(
+        id='example-graph',
+        figure=fig
+    ),
+    dcc.Graph(
+        id = 'another-graph',
+        figure=fig1
+    ),
+    dcc.Graph(
+        id = 'another-graph1',
+        figure=fig2
+    )
+])
+
+if __name__ == '__main__':
+    app.run_server(debug=False)
